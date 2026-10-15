@@ -1,0 +1,15 @@
+CREATE TABLE users (id INT, name TEXT, password_hash TEXT, role TEXT, balance INT);
+CREATE TABLE pcs (id INT, label TEXT, status TEXT);
+CREATE TABLE sessions (id INT, user_id INT, pc_id INT, start_time INT, end_time INT);
+CREATE TABLE bills (id INT, session_id INT, amount INT);
+CREATE TABLE audit_log (id INT, user_id INT, action TEXT, time INT);
+INSERT INTO users VALUES (1, 'Rahul', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'CUSTOMER', 500);
+INSERT INTO users VALUES (2, 'Priya', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'ADMIN', 0);
+INSERT INTO users VALUES (3, 'Amit', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'STAFF', 0);
+INSERT INTO users VALUES (4, 'Shifa', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'ADMIN', 0);
+INSERT INTO pcs VALUES (1, 'PC-1', 'FREE');
+INSERT INTO pcs VALUES (2, 'PC-2', 'FREE');
+INSERT INTO pcs VALUES (3, 'PC-3', 'FREE');
+INSERT INTO pcs VALUES (4, 'PC-4', 'FREE');
+INSERT INTO pcs VALUES (5, 'PC-5', 'FREE');
+INSERT INTO pcs VALUES (6, 'PC-6', 'FREE');
