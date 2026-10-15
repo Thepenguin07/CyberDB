@@ -1,1 +1,73 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CyberDB - Live Sessions</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; padding: 24px; background: #f4f6f8; color: #1d2733; }
+  h1 { margin: 0 0 4px; font-size: 22px; }
+  .sub { color: #5b6b7b; margin-bottom: 20px; font-size: 14px; }
+  .cards { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  .card { background: #fff; border-radius: 10px; padding: 12px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.1); min-width: 130px; }
+  .card b { display: block; font-size: 22px; }
+  .card span { font-size: 12px; color: #5b6b7b; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #e6ebf0; }
+  th { background: #243447; color: #fff; font-weight: 600; font-size: 13px; }
+  .live { color: #1a8f4c; font-weight: 600; }
+  .stale { color: #c0392b; font-weight: 600; }
+  .empty { padding: 20px; color: #5b6b7b; text-align: center; }
+</style>
+</head>
+<body>
+<h1>CyberDB live session monitor</h1>
+<div class="sub">Engine status: <span id="state" class="stale">waiting...</span></div>
+<div class="cards">
+  <div class="card"><b id="active">0</b><span>Active sessions</span></div>
+  <div class="card"><b id="revenue">Rs 0</b><span>Running bill total</span></div>
+  <div class="card"><b id="pid">-</b><span>Engine PID</span></div>
+  <div class="card"><b id="uptime">-</b><span>Uptime (s)</span></div>
+  <div class="card"><b id="hitrate">-</b><span>Buffer hit rate</span></div>
+  <div class="card"><b id="commits">0</b><span>Commits</span></div>
+</div>
+<table>
+  <thead><tr><th>PC</th><th>User ID</th><th>Started</th><th>Minutes</th><th>Bill (Rs)</th></tr></thead>
+  <tbody id="rows"></tbody>
+</table>
+<script>
+let last = null;
+async function poll() {
+  try {
+    const res = await fetch('status.json?t=' + Date.now());
+    last = await res.json();
+  } catch (e) { last = null; }
+  render();
+}
+function render() {
+  const state = document.getElementById('state');
+  if (!last) { state.textContent = 'status.json not reachable'; state.className = 'stale'; return; }
+  const now = Math.floor(Date.now() / 1000);
+  const age = now - last.generated_at;
+  state.textContent = age <= 6 ? 'running' : 'no update for ' + age + 's (engine stopped?)';
+  state.className = age <= 6 ? 'live' : 'stale';
+  const rate = last.rate_per_minute;
+  let total = 0, html = '';
+  for (const s of last.sessions) {
+    const mins = Math.max(1, Math.ceil((now - s.start) / 60));   // same rule as the C engine
+    const bill = mins * rate; total += bill;
+    html += `<tr><td>PC-${s.pc}</td><td>${s.user}</td><td>${new Date(s.start * 1000).toLocaleTimeString()}</td><td>${mins}</td><td>${bill}</td></tr>`;
+  }
+  document.getElementById('rows').innerHTML = html || '<tr><td colspan="5" class="empty">No active sessions</td></tr>';
+  document.getElementById('active').textContent = last.sessions.length;
+  document.getElementById('revenue').textContent = 'Rs ' + total;
+  const e = last.engine, t = e.buffer_hits + e.buffer_misses;
+  document.getElementById('pid').textContent = e.pid;
+  document.getElementById('uptime').textContent = e.uptime_seconds;
+  document.getElementById('hitrate').textContent = t ? Math.round(100 * e.buffer_hits / t) + '%' : '-';
+  document.getElementById('commits').textContent = e.txn_commits;
+}
+poll(); setInterval(poll, 2000); setInterval(render, 1000);
+</script>
+</body>
+</html>
