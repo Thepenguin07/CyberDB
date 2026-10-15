@@ -22,6 +22,6 @@ A database engine written from scratch in C, powering a cybercafe management sys
 ## Run the Java app on the real engine
     cd app && javac -d out $(find src -name "*.java")
     java -cp out app.Main engine ../cyberdb ../cyberdb.db      # (omit arguments for mock data)
-Test users: Priya (ADMIN), Amit (STAFF), Rahul (CUSTOMER), Shifa (ADMIN); password `1234`.
+Test users: Shifa (ADMIN), Gourvansh (STAFF), Priyanshu (CUSTOMER), Shifa (ADMIN); password `1234`.
 
 Docs: `docs/CONTRACTS.md` (interfaces), `docs/MODULE_GUIDE.md` (what each module does, demos, viva questions).
