@@ -1,4 +1,3 @@
-/* Name: Anjali Chand | Roll No: 09 | Project: SQL Parser and Query Executor */
 #ifndef PARSER_H
 #define PARSER_H
 #include "tokenizer.h"
