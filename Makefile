@@ -19,7 +19,7 @@ m4: storage/storage.c buffer/buffer.c transactions/txn.c tests/test_m4.c
 m5: sessions/sessions.c tests/test_m5.c
 	$(CC) $(CFLAGS) $^ -o m5test && ./m5test
 integration: cyberdb
-	sh tests/integration.sh
+	bash tests/integration.sh
 
 test: m1 m2 m3 m4 m5 integration
 
