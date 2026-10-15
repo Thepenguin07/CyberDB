@@ -8,3 +8,4 @@ out/
 status.json
 cyberdb
 m?test
+*.dSYM/
