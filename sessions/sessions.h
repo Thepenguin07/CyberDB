@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 /* Module 5 - Session Orchestration + Process Monitoring.
- * Tracks which user is on which PC, since when, and what they owe. State is saved to a file
+ * Tracks which user is on which PC, since when, and what they owe. State is saved to a files
  * so sessions survive an engine restart. The monitor writes status.json for the live dashboard. */
 
 int  sessions_init(const char *file);                       /* load saved sessions */
