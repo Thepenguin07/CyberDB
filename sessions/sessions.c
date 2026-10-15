@@ -17,7 +17,7 @@ static void save(void) {
     for (int i = 0; i < MAXS; i++)
         if (list[i].active) fprintf(f, "%d %d %ld\n", list[i].pc, list[i].user, (long)list[i].start);
     fclose(f);
-    rename(tmp, path);                       /* atomic replace: never a half-written file */
+    rename(tmp, path);                       /* atomic replace: never a half-written files */
 }
 
 int sessions_init(const char *file) {
