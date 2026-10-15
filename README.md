@@ -16,6 +16,9 @@ The source uses POSIX `fsync`, `unistd.h`, and pthreads. For Windows, the easies
 ```sql
 CREATE TABLE users (id INT, name VARCHAR(50), age INT);
 INSERT INTO users VALUES (1, 'Anjali Chand', 20);
+INSERT INTO users VALUES (20, 'Abhinav Tariyal', 21);
+INSERT INTO users VALUES (2, 'Abhaya Singh', 24);
+INSERT INTO users VALUES (11, 'Ankit Rawat', 29);
 INSERT INTO users (name, id, age) VALUES ('Rohan', 2, 21);
 SELECT * FROM users;
 SELECT name, age FROM users WHERE age >= 20 ORDER BY age DESC;
