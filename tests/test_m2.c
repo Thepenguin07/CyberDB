@@ -37,6 +37,12 @@ int main(void) {
     for (int k = 0; k < N; k++) assert((btree_search(root, k, &pg, &sl) == 0) == (k % 2 == 1));
     assert(btree_delete(root, 0) == -1);
     printf("PASS deleted all even keys; odd keys remain\n");
+    /* reinsert a deleted key and verify it can be found again */
+    assert(btree_insert(&root, 0, 999, 7) == 0);
+    assert(btree_search(root, 0, &pg, &sl) == 0);
+    assert(pg == 999 && sl == 7);
+
+printf("PASS deleted key can be reinserted\n");
 
     /* persistence: flush, close, reopen, search again */
     buffer_flush_all(); storage_close();
