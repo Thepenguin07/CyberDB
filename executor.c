@@ -1,4 +1,3 @@
-/* Name: Anjali Chand | Roll No: 09 | Project: SQL Parser and Query Executor */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
