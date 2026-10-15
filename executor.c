@@ -1,4 +1,4 @@
-/* Name: Anjali Chand | Roll No: 09 | Project: SQL Parser and Query Executor */
+//changed the GPT generated code
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
