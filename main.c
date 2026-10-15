@@ -1,4 +1,3 @@
-/* Name: Anjali Chand | Roll No: 09 | Project: SQL Parser and Query Executor */
 #define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
