@@ -49,6 +49,38 @@ int main(void) {
     storage_read_page(1, disk); assert(strcmp(disk, "pc1=BUSY") == 0);
     printf("PASS recovery: committed transactions replayed from the log\n");
 
+    /* test recovery undo: uncommitted transaction rolled back via before-image */
+    char old_p0[PAGE_SIZE] = {0};
+    char new_p0[PAGE_SIZE] = {0};
+    strcpy(old_p0, "balance=500");
+    strcpy(new_p0, "balance=12345");
+    int uncommitted_t = txn_begin();
+    assert(txn_log_write(uncommitted_t, 0, old_p0, new_p0) == 0);
+    txn_init("m4.wal");  /* flushes and closes open WAL stream to simulate crash on disk */
+    storage_write_page(0, new_p0);
+    storage_sync();
+    storage_close();
+
+    storage_open("m4.db");
+    txn_recover();
+    storage_read_page(0, disk);
+    assert(strcmp(disk, "balance=500") == 0);
+    printf("PASS recovery: uncommitted transaction undone using before-image\n");
+
+    /* test checkpoint: flushes dirty buffer pool pages and empties the WAL log */
+    t = txn_begin();
+    put(0, "balance=750");
+    assert(txn_commit(t) == 0);
+    txn_checkpoint();
+    FILE *fwal = fopen("m4.wal", "rb");
+    assert(fwal != NULL);
+    fseek(fwal, 0, SEEK_END);
+    assert(ftell(fwal) == 0);
+    fclose(fwal);
+    storage_read_page(0, disk);
+    assert(strcmp(disk, "balance=750") == 0);
+    printf("PASS checkpoint: buffer flushed to disk and WAL truncated\n");
+
     storage_close(); remove("m4.db"); remove("m4.wal");
     printf("MODULE 4: ALL TESTS PASSED\n");
     return 0;
