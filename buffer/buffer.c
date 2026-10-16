@@ -23,7 +23,6 @@ static int find(int id) {
         if (pool[i].used && pool[i].page_id == id) return i;
     return -1;
 }
-
 /* free frame first, else least-recently-used frame that is not pinned and not txn-dirty */
 static int pick_victim(void) {
     int best = -1;
